@@ -1,4 +1,4 @@
-import express, { Response,Request } from "express";
+import express, { Response,Request,NextFunction } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { HttpError } from "http-errors";
@@ -10,7 +10,7 @@ export const app = express();
 
 app.use(
   cors({
-    origin: process.env.PORT,
+    origin: "http://localhost:5173",
   })
 );
 app.use(express.static("public"))
@@ -21,15 +21,15 @@ app.use(express.json({ limit: "16kb" }));
 //routes
 
 
-app.use("api/users",userRouter);
+app.use("/api/users",userRouter);
 
 
 
 
 
-app.use((err: HttpError, _:Request,res: Response) => {
+app.use((err: HttpError, _:Request,resp: Response,next: NextFunction) => {
   const statusCode = err.statusCode || 500;
-  res.status(statusCode).json({
+  resp.status(statusCode).json({
     message: err.message|| "Something went wrong",
     success:false,
   });
