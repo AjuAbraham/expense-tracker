@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import React, { useState, ChangeEvent, FormEvent, useContext } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,8 +9,10 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import axios from "@/axios";
+import { AxiosError } from "axios";
+import { TokenContext } from "@/context/tokenContext";
 const Signup: React.FC = () => {
   const [formData, setFormData] = useState({
     firstName: "",
@@ -21,6 +23,8 @@ const Signup: React.FC = () => {
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState("");
+  const { setToken } = useContext(TokenContext);
+  const navigate = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -47,20 +51,14 @@ const Signup: React.FC = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:8000/api/users/register", {
-        method: "POST",
-        body: form,
-      });
+      const response = await axios.post("/users/register", formData);
 
-      if (!response.ok) {
-        throw new Error("Failed to create an account");
-      }
-
-      await response.json();
+      setToken(response.data.token);
       setSubmissionStatus("Account created successfully!");
+      navigate("/");
     } catch (error) {
-      if (error instanceof Error) {
-        setSubmissionStatus(error.message);
+      if (error instanceof AxiosError) {
+        setSubmissionStatus(error.response?.data.message);
       } else {
         setSubmissionStatus("An unknown error occurred.");
       }
@@ -68,13 +66,6 @@ const Signup: React.FC = () => {
       setIsSubmitting(false);
     }
   };
-
-  useEffect(() => {
-    if (submissionStatus) {
-      // Do something with the submission status (e.g., show a notification)
-      console.log(submissionStatus);
-    }
-  }, [submissionStatus]);
 
   return (
     <div className="flex items-center justify-center h-screen bg-black">
@@ -94,7 +85,6 @@ const Signup: React.FC = () => {
                   <Input
                     id="firstName"
                     className="bg-transparent border-slate-500"
-                    placeholder="Max"
                     value={formData.firstName}
                     onChange={handleChange}
                     required
@@ -105,7 +95,6 @@ const Signup: React.FC = () => {
                   <Input
                     id="lastName"
                     className="bg-transparent border-slate-500"
-                    placeholder="Robinson"
                     value={formData.lastName}
                     onChange={handleChange}
                     required
@@ -143,10 +132,17 @@ const Signup: React.FC = () => {
                   onChange={handleFileChange}
                 />
               </div>
-              <Button type="submit" className="w-full bg-white text-black hover:bg-slate-200" disabled={isSubmitting}>
+              <Button
+                type="submit"
+                className="w-full bg-white text-black hover:bg-slate-200"
+                disabled={isSubmitting}
+              >
                 {isSubmitting ? "Creating..." : "Create an account"}
               </Button>
-              <Button variant="outline" className="w-full border-[1px] border-slate-500 text-white bg-black hover:bg-[#26272b] hover:text-white">
+              <Button
+                variant="outline"
+                className="w-full border-[1px] border-slate-500 text-white bg-black hover:bg-[#26272b] hover:text-white"
+              >
                 Sign up with Google
               </Button>
             </div>

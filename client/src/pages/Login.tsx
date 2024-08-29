@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import React, { useState, ChangeEvent,useContext, FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,15 +10,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link, useNavigate } from "react-router-dom";
+import axios from '@/axios'
+import { AxiosError } from "axios";
+import { TokenContext } from "@/context/tokenContext";
 
 const Login: React.FC = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const {setToken} = useContext(TokenContext);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState("");
-  const navigate=useNavigate()
+  const navigate=useNavigate();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [id]: value }));
@@ -28,39 +32,22 @@ const Login: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmissionStatus("");
-
     try {
-      const response = await fetch("http://localhost:8000/api/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error("Login failed. Please check your credentials.");
-      }
-
-      await response.json();
+      const response = await axios.post("/users/login",formData);
       setSubmissionStatus("Login successful!");
-    } catch (error) {
-      if (error instanceof Error) {
-        setSubmissionStatus(error.message);
-      } else {
-        setSubmissionStatus("An unknown error occurred.");
+      setToken(response.data.token);
+      navigate('/')
+    } 
+    catch (error:unknown) {
+      if(error instanceof AxiosError){
+        setSubmissionStatus(error.response?.data.message)
       }
+      
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  useEffect(() => {
-    if (submissionStatus) {
-      navigate('/')
-      console.log(submissionStatus);
-    }
-  }, [submissionStatus]);
 
   return (
     <div className="flex items-center justify-center h-screen bg-black">

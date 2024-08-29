@@ -1,12 +1,32 @@
+import { useContext, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ImStatsDots } from "react-icons/im";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
 import { GiReceiveMoney } from "react-icons/gi";
 import { ImExit } from "react-icons/im";
-import { Outlet,useNavigate } from "react-router-dom";
+import {  Outlet,useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { TokenContext } from "@/context/tokenContext";
+
+
+
 const Home = () => {
   const navigate = useNavigate();
+  const {getToken,removeToken} = useContext(TokenContext);
+
+  const handleLogout = ()=>{
+    removeToken();
+    navigate("/auth/login");
+  }
+  useEffect(()=>{
+   const token = getToken();
+   if(!token){
+    navigate("/auth/login")
+   }
+  },[getToken, navigate])
+
+  
+
   return (
     <>
       <div className="grid h-screen w-screen grid-cols-12 bg-black">
@@ -23,6 +43,7 @@ const Home = () => {
               </div>
             </div>
           </div>
+
           {/* nav bar */}
           <ul className=" mt-24 ml-[40px] text-[#C7D1DB]">
             <li className="flex gap-5 items-center cursor-pointer mb-5" onClick={()=>navigate('/dashboard')}>
@@ -41,7 +62,7 @@ const Home = () => {
 
           {/* logout button*/}
           <div className="mt-[390px] ml-[20px]">
-          <Button className="bg-white text-black">
+          <Button className="bg-white text-black hover:bg-slate-500" onClick={handleLogout}>
           <ImExit  size={20}/>
           <h3 className="text-lg font-bold">Log Out</h3>
           </Button> 

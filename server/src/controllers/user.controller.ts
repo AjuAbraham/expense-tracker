@@ -1,19 +1,23 @@
 import { NextFunction, Request, Response } from "express";
 import { User } from "../models/user.model";
 import createHttpError from "http-errors";
-import uploadToCloudinary from "../utils/cloudinary"; 
-import path from "path";
+import uploadToCloudinary from "../utils/cloudinary";
 
 const userRegisteration = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { firstName, lastName, email, password} = req.body;
+  const { firstName, lastName, email, password } = req.body;
 
   if (!firstName || !lastName || !email || !password) {
     const error = createHttpError(400, "All fields are required");
     return next(error);
+  }
+  const exsistingUser = await User.findOne({email});
+  if(exsistingUser){
+    const error = createHttpError(400,"User already exsist");
+    next(error);
   }
   const avatar = req.file?.path;
 
@@ -22,20 +26,20 @@ const userRegisteration = async (
 
     if (avatar) {
       const cloudinaryResult = await uploadToCloudinary(avatar);
-      avatarUrl = cloudinaryResult?.secure_url || ""; 
+      avatarUrl = cloudinaryResult?.secure_url || "";
     }
     const userDoc = new User({
       firstName,
       lastName,
       email,
       password,
-      avatar:avatarUrl,
+      avatar: avatarUrl,
     });
 
     await userDoc.save();
     const token = userDoc.generateAccessToken();
 
-    res.status(201).json({ user: userDoc, token });
+    res.status(201).json({  token });
   } catch (error) {
     if (error instanceof Error) {
       if ((error as any).code === 11000) {
@@ -54,30 +58,28 @@ const userRegisteration = async (
 const userLogin = async (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({
-      message: "Email and password are required",
-      success: false,
-    });
+  if (!email) {
+    const error = createHttpError(400, "Email is required");
+    return next(error);
+  }
+  if ( !password) {
+    const error = createHttpError(400, "Email and password are required");
+    return next(error);
   }
 
   try {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(404).json({
-        message: "User not found",
-        success: false,
-      });
+      const error = createHttpError(404, "User does'nt exsist");
+      return next(error);
     }
 
     const isPasswordValid = await user.checkPassword(password);
 
     if (!isPasswordValid) {
-      return res.status(401).json({
-        message: "Invalid password",
-        success: false,
-      });
+      const error = createHttpError(401, "Invalid password");
+      return next(error);
     }
 
     const token = user.generateAccessToken();
@@ -86,16 +88,10 @@ const userLogin = async (req: Request, res: Response, next: NextFunction) => {
       message: "Login successful",
       success: true,
       token,
-      user: {
-        _id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        avatar: user.avatar,
-      },
     });
   } catch (error) {
-    next(error);
+    console.log("Error occured while logging in");
+    return next(error);
   }
 };
 

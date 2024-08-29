@@ -5,6 +5,7 @@ import Home from './pages/Home'
 import Dashboard from "./pages/Dashboard";
 import Income from "./pages/Income";
 import Expenses from "./pages/Expenses";
+import Auth from "./pages/Auth";
 
 const router =  createBrowserRouter([
     {
@@ -28,6 +29,7 @@ const router =  createBrowserRouter([
 
     {
         path: '/auth',
+        element: <Auth/>,
         children:[
             {
                 path: "login",
