@@ -80,8 +80,8 @@ const Income: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-black">
-      <Card className="mx-auto max-w-sm bg-transparent">
+    <div className="flex items-center justify-center h-full bg-[#161a1d] border-slate-500 border-2 rounded-xl">
+      <Card className="mx-auto max-w-sm bg-transparent bg-black">
         <CardHeader>
           <CardTitle className="text-xl text-white">Add Income</CardTitle>
           <CardDescription className="text-white">

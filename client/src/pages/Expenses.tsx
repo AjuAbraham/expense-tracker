@@ -78,8 +78,8 @@ const Expenses: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-black">
-      <Card className="mx-auto max-w-sm bg-transparent">
+    <div className="flex items-center justify-center h-full bg-[#161a1d] border-slate-500 border-2 rounded-xl">
+      <Card className="mx-auto max-w-sm bg-transparent bg-black">
         <CardHeader>
           <CardTitle className="text-xl text-white">Add Expense</CardTitle>
           <CardDescription className="text-white">
@@ -87,7 +87,7 @@ const Expenses: React.FC = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} >
             <div className="grid gap-4">
               <div className="grid gap-2 text-white">
                 <Label htmlFor="title">Title</Label>
