@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, useContext, FormEvent } from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -26,10 +26,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import axios from "@/axios";
 import { AxiosError } from "axios";
-import { TokenContext } from "@/context/tokenContext";
+
 
 const Expenses: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -40,7 +40,6 @@ const Expenses: React.FC = () => {
     description: "",
   });
 
-  const { setToken } = useContext(TokenContext);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState("");
   const navigate = useNavigate();
@@ -51,7 +50,6 @@ const Expenses: React.FC = () => {
     const { id, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [id]: value }));
 
-    console.log(formData);
   };
 
   const handleDateChange = (newDate: Date | undefined) => {
@@ -65,8 +63,9 @@ const Expenses: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmissionStatus("");
+    const formattedDate = formData.date ? formData.date.toISOString() : undefined;
     try {
-      const response = await axios.post("/expenses", formData); // Change the API endpoint as needed
+       await axios.post("/expenses/setExpense", {...formData,date:formattedDate});
       setSubmissionStatus("Expense added successfully!");
       navigate("/");
     } catch (error: unknown) {

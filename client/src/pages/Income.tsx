@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, useContext, FormEvent } from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -29,11 +29,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import axios from "@/axios";
 import { AxiosError } from "axios";
-import { TokenContext } from "@/context/tokenContext";
 
 const Income: React.FC = () => {
   const [formData, setFormData] = useState({
-    userId: "", // User ID will typically be obtained from context or authentication
     source: "",
     amount: "",
     category: "",
@@ -41,7 +39,6 @@ const Income: React.FC = () => {
     description: "",
   });
 
-  const { setToken } = useContext(TokenContext);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState("");
   const navigate = useNavigate();
@@ -54,6 +51,7 @@ const Income: React.FC = () => {
   };
 
   const handleDateChange = (newDate: Date | undefined) => {
+    
     setFormData((prevData) => ({ ...prevData, date: newDate }));
   };
 
@@ -61,16 +59,15 @@ const Income: React.FC = () => {
     setFormData((prevData) => ({ ...prevData, category: value }));
   };
 
-  const handleSourceChange = (value: string) => {
-    setFormData((prevData) => ({ ...prevData, source: value }));
-  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmissionStatus("");
+    const formattedDate = formData.date ? formData.date.toISOString() : undefined;
     try {
-      const response = await axios.post("/income", formData); // Change the API endpoint as needed
+       await axios.post("/incomes/setIncome", {...formData,date:formattedDate}); // Change the API endpoint as needed
+      
       setSubmissionStatus("Income added successfully!");
       navigate("/");
     } catch (error: unknown) {
