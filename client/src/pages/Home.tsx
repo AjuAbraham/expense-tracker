@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState} from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ImStatsDots } from "react-icons/im";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
@@ -7,22 +7,38 @@ import { ImExit } from "react-icons/im";
 import {  Outlet,useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { TokenContext } from "@/context/tokenContext";
+import axios from "@/axios";
 
-
+interface User {
+  email?:string;
+  password?:string;
+  avatar?:string;
+  firstName?:string;
+  lastName?:string;
+}
 
 const Home = () => {
   const navigate = useNavigate();
   const {getToken,removeToken} = useContext(TokenContext);
-
+ const [user,setUser]= useState<User|null>(null);
   const handleLogout = ()=>{
     removeToken();
     navigate("/auth/login");
   }
+  
+  const handleDataFetch = async (token:string|null)=>{
+    const res = await axios.get("/users/getUserById", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+     setUser(res.data.user);
+  }
+
   useEffect(()=>{
    const token = getToken();
    if(!token){
     navigate("/auth/login")
    }
+   handleDataFetch(token);
   },[getToken, navigate])
 
   
@@ -35,11 +51,11 @@ const Home = () => {
           <div className="mt-10 flex ml-[30px]">
             <div className="flex items-center justify-center gap-4">
               <Avatar className="w-[60px] h-[60px]">
-                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarImage src={user?.avatar?user.avatar:"https://github.com/shadcn.png"} />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
               <div className="flex flex-col">
-                <h2 className="text-xl font-bold text-white">Aju Abraham</h2>
+                <h2 className="text-xl font-bold text-white">{user?.firstName} {user?.lastName}</h2>
               </div>
             </div>
           </div>
