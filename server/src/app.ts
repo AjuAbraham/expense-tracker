@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { HttpError } from "http-errors";
 import userRouter from "./routes/user.routes";
+import incomeRouter from "./routes/income.routes";
+import expenseRouter from "./routes/expense.routes";
 
 dotenv.config();
 
@@ -23,6 +25,8 @@ app.use(express.json({ limit: "16kb" }));
 
 
 app.use("/api/users",userRouter);
+app.use("/api/incomes",incomeRouter);
+app.use("/api/expenses",expenseRouter);
 
 
 

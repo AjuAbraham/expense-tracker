@@ -4,7 +4,7 @@ import { UserFields } from "./user.model";
 interface expenseDocument {
     userId: UserFields;
     title:string;
-    ammount:number;
+    amount:number;
     category:string;
     date:Date;
     description:string;
@@ -19,9 +19,10 @@ const expenseSchema:Schema<expenseDocument> =  new Schema({
    title:{
     type:String,
     required:true,
+    unique:true,
     trim:true
    },
-   ammount:{
+   amount:{
     type:Number,
     required:true,
    },
@@ -36,7 +37,6 @@ const expenseSchema:Schema<expenseDocument> =  new Schema({
    },
    description:{
     type:String,
-    required:true
    }
    
 },{timestamps:true});
