@@ -1,8 +1,8 @@
 import mongoose,{Schema} from "mongoose";
-import { UserDocument } from "./user.model";
+import { UserFields } from "./user.model";
 
 interface expenseDocument {
-    userId: UserDocument;
+    userId: UserFields;
     title:string;
     ammount:number;
     category:string;

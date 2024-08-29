@@ -83,7 +83,6 @@ const userLogin = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const token = user.generateAccessToken();
-
     res.status(200).json({
       message: "Login successful",
       success: true,
@@ -95,4 +94,25 @@ const userLogin = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { userRegisteration, userLogin };
+
+const getUserById = async (req:Request,res:Response,next:NextFunction)=>{
+   try {
+    const user = req.user;
+    if(!user){
+     const error = createHttpError(400,"Unable to fetch User");
+     return next(error);
+    }
+    res.status(200).json({success:true,user,message:"User fetched successfully"});
+
+   } catch (error) {
+    if(error instanceof Error){
+      const err = createHttpError(500,error.message);
+      return next(err);
+    }
+    const err = createHttpError(500,"Unable to find user");
+    return next(err);
+   }
+}
+
+
+export { userRegisteration, userLogin,getUserById };

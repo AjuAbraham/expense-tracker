@@ -2,7 +2,7 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-export interface UserDocument {
+export interface UserFields {
     firstName: string;
     lastName: string;
     email: string;
@@ -10,6 +10,10 @@ export interface UserDocument {
     avatar?: string;
 }
 
+interface UserDocument extends Document, UserFields {
+    checkPassword(password: string): Promise<boolean>;
+    generateAccessToken(): string;
+}
 
 const userSchema: Schema<UserDocument> = new Schema({
     firstName: {
@@ -49,4 +53,4 @@ userSchema.methods.generateAccessToken = function (): string {
     return jwt.sign({ _id: this._id }, process.env.ACCESS_TOKEN || "", { expiresIn: process.env.ACCESS_TOKEN_EXPIRY });
 };
 
-export const User = mongoose.model<UserDocument>("User", userSchema);
+export const User: Model<UserDocument> = mongoose.model<UserDocument>("User", userSchema);
