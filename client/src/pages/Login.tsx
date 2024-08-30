@@ -36,7 +36,7 @@ const Login: React.FC = () => {
       const response = await axios.post("/users/login",formData);
       setSubmissionStatus("Login successful!");
       setToken(response.data.token);
-      navigate('/')
+      navigate('/dashboard')
     } 
     catch (error:unknown) {
       if(error instanceof AxiosError){

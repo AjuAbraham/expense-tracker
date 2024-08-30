@@ -55,7 +55,7 @@ const Signup: React.FC = () => {
 
       setToken(response.data.token);
       setSubmissionStatus("Account created successfully!");
-      navigate("/");
+      navigate("/dashboard");
     } catch (error) {
       if (error instanceof AxiosError) {
         setSubmissionStatus(error.response?.data.message);

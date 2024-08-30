@@ -9,7 +9,7 @@ const Auth = () => {
     useEffect(()=>{
         const token = getToken();
         if(token){
-            navigate("/")
+            navigate("/dashboard")
         }
     },[getToken, navigate])
   return (
