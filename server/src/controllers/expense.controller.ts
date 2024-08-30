@@ -7,7 +7,7 @@ const setExpense = async (req:Request,res:Response,next:NextFunction)=>{
     
     try {
         const {title,amount,category,date,description} = req.body;
-        if(!title|| !amount|| !category|| !date|| !description){
+        if(!title|| !amount|| !category|| !date){
             const err = createHttpError(400,"All fields are required");
             next(err);
         }
@@ -54,7 +54,29 @@ const setExpense = async (req:Request,res:Response,next:NextFunction)=>{
 
 }
 
+const getExpense = async (req:Request,res:Response,next:NextFunction)=>{
+    
+    try {
+        const _id = req.user?._id;
+        if(!_id){
+            const err = createHttpError(400,"User not authenticated");
+            return next(err);
+        }
+        const expense = await Expense.find({userId:_id}).select("-createdAt -updatedAt -userId -__v");;
+        if(!expense){
+            const err = createHttpError(500,"Expense not found");
+            return next(err);
+        }
+        res.status(200).json({success:true,expense,message:"Expense fetched successfully"});
+        
+    } catch (error) {
+        if(error instanceof Error){
+            console.log("Error occured while setting income");
+            const err = createHttpError(500,error.message);
+            next(err);
+        }
+    }
+}
 
 
-
-export {setExpense}
+export {setExpense,getExpense}

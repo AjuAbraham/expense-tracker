@@ -1,11 +1,13 @@
 import { Router } from "express";
-import { setExpense } from "../controllers/expense.controller";
+import { getExpense, setExpense } from "../controllers/expense.controller";
+import { verifyJwt } from "../middlewares/auth";
 
 
 const expenseRouter = Router();
 
 
-expenseRouter.route("/setExpense").post(setExpense);
+expenseRouter.route("/setExpense").post(verifyJwt,setExpense);
+expenseRouter.route("/getExpense").get(verifyJwt,getExpense);
 
 
 

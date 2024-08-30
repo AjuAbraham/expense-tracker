@@ -3,7 +3,7 @@ import { UserFields } from "./user.model";
 
 interface incomeDocument {
     userId: UserFields;
-    source:string;
+    title:string;
     amount:number;
     category:string;
     date:Date;
@@ -16,7 +16,7 @@ const incomeSchema:Schema<incomeDocument> =  new Schema({
     type: Schema.Types.ObjectId,
     ref: "User"
    },
-   source:{
+   title:{
     type:String,
     required:true,
     trim:true,

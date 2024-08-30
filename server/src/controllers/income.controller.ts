@@ -6,12 +6,12 @@ import {Request,Response,NextFunction} from 'express';
 const setIncome = async (req:Request,res:Response,next:NextFunction)=>{
     
     try {
-        const {source,amount,category,date,description} = req.body;
-        if(!source|| !amount|| !category|| !date|| !description){
+        const {title,amount,category,date,description} = req.body;
+        if(!title|| !amount|| !category|| !date){
             const err = createHttpError(400,"All fields are required");
             next(err);
         }
-        const prevIncome = await Income.findOne({source});
+        const prevIncome = await Income.findOne({title});
         if(prevIncome){
             const err = createHttpError(400,"Income Already exsist");
             next(err);
@@ -22,9 +22,8 @@ const setIncome = async (req:Request,res:Response,next:NextFunction)=>{
         if (isNaN(parsedDate.getTime())) {
           return next(createHttpError(400, "Invalid date format"));
         }
-
         const income = await Income.create({
-            source,
+            title,
             amount,
             category,
             date:parsedDate,
@@ -46,7 +45,7 @@ const setIncome = async (req:Request,res:Response,next:NextFunction)=>{
         
     } catch (error) {
         if(error instanceof Error){
-            console.log("Error occured while setting income");
+            console.log("Error occured while setting income",error.message);
             const err = createHttpError(500,error.message);
             next(err);
         }
@@ -54,7 +53,29 @@ const setIncome = async (req:Request,res:Response,next:NextFunction)=>{
 
 }
 
+const getIncome = async (req:Request,res:Response,next:NextFunction)=>{
+    
+    try {
+        const _id = req.user?._id;
+        if(!_id){
+            const err = createHttpError(400,"User not authenticated");
+            return next(err);
+        }
+        const income = await Income.find({userId:_id}).select("-createdAt -updatedAt -userId -__v");
+        if(!income){
+            const err = createHttpError(500,"Income not found");
+            return next(err);
+        }
+        res.status(200).json({success:true,income,message:"Income fetched successfully"});
+        
+    } catch (error) {
+        if(error instanceof Error){
+            console.log("Error occured while setting income");
+            const err = createHttpError(500,error.message);
+            next(err);
+        }
+    }
+}
 
 
-
-export {setIncome}
+export {setIncome,getIncome}
