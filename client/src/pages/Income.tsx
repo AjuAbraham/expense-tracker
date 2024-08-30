@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import React, { useState, ChangeEvent, FormEvent, useContext } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -26,22 +26,23 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useNavigate } from "react-router-dom";
+
 import axios from "@/axios";
 import { AxiosError } from "axios";
+import { TokenContext } from "@/context/tokenContext";
+import InfoTable from "@/components/custom/InfoTable";
 
 const Income: React.FC = () => {
   const [formData, setFormData] = useState({
-    source: "",
+    title: "",
     amount: "",
     category: "",
     date: undefined as Date | undefined,
     description: "",
   });
-
+  const { getToken } = useContext(TokenContext);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState("");
-  const navigate = useNavigate();
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -51,7 +52,6 @@ const Income: React.FC = () => {
   };
 
   const handleDateChange = (newDate: Date | undefined) => {
-    
     setFormData((prevData) => ({ ...prevData, date: newDate }));
   };
 
@@ -59,17 +59,32 @@ const Income: React.FC = () => {
     setFormData((prevData) => ({ ...prevData, category: value }));
   };
 
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmissionStatus("");
-    const formattedDate = formData.date ? formData.date.toISOString() : undefined;
+    const token = getToken();
+    const formattedDate = formData.date
+      ? formData.date.toISOString()
+      : undefined;
     try {
-       await axios.post("/incomes/setIncome", {...formData,date:formattedDate}); // Change the API endpoint as needed
-      
+      await axios.post(
+        "/incomes/setIncome",
+        { ...formData, date: formattedDate },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setSubmissionStatus("Income added successfully!");
-      navigate("/");
+      setFormData({
+        title: "",
+        amount: "",
+        category: "",
+        date: undefined as Date | undefined,
+        description: "",
+      });
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         setSubmissionStatus(error.response?.data.message);
@@ -80,49 +95,47 @@ const Income: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-full bg-[#161a1d] border-slate-500 border-2 rounded-xl">
-      <Card className="mx-auto max-w-sm bg-transparent bg-black">
+    <div className="flex items-center gap-6 p-4 h-full border-2 rounded-xl">
+      <Card className="mx-auto max-w-sm ml-16 rounded-xl ">
         <CardHeader>
-          <CardTitle className="text-xl text-white">Add Income</CardTitle>
-          <CardDescription className="text-white">
+          <CardTitle className="text-xl">Add Income</CardTitle>
+          <CardDescription>
             Enter details to add a new income entry
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit}>
             <div className="grid gap-4">
-              <div className="grid gap-2 text-white">
-                <Label htmlFor="source">Title</Label>
+              <div className="grid gap-2">
+                <Label htmlFor="title">Title</Label>
                 <Input
-                  id="source"
+                  id="title"
                   type="text"
                   placeholder="e.g., Salary"
-                  className="bg-transparent border-slate-500"
-                  value={formData.source}
+                  value={formData.title}
                   onChange={handleChange}
                   required
                 />
               </div>
-              <div className="grid gap-2 text-white">
+              <div className="grid gap-2">
                 <Label htmlFor="amount">Amount</Label>
                 <Input
                   id="amount"
                   type="number"
                   placeholder="e.g., 1000"
-                  className="bg-transparent border-slate-500"
                   value={formData.amount}
                   onChange={handleChange}
                   required
                 />
               </div>
-              <div className="grid gap-2 text-white ">
+              <div className="grid gap-2">
                 <Label htmlFor="category">Category</Label>
                 <Select
                   value={formData.category}
                   onValueChange={handleCategoryChange}
                   required
                 >
-                  <SelectTrigger className="text-black w-[180px]">
+                  <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Select a category" />
                   </SelectTrigger>
                   <SelectContent>
@@ -136,14 +149,14 @@ const Income: React.FC = () => {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="grid gap-2 text-white">
+              <div className="grid gap-2">
                 <Label htmlFor="date">Date</Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
                       variant={"outline"}
                       className={cn(
-                        "w-[240px] pl-3 text-left font-normal bg-transparent",
+                        "w-[240px] pl-3 text-left font-normal",
                         !formData.date && "text-muted-foreground"
                       )}
                     >
@@ -168,33 +181,27 @@ const Income: React.FC = () => {
                   </PopoverContent>
                 </Popover>
               </div>
-              <div className="grid gap-2 text-white">
+              <div className="grid gap-2">
                 <Label htmlFor="description">Description</Label>
                 <Input
                   id="description"
                   type="text"
                   placeholder="Optional"
-                  className="bg-transparent border-slate-500"
                   value={formData.description}
                   onChange={handleChange}
                 />
               </div>
-              <Button
-                type="submit"
-                className="w-full bg-white text-black hover:bg-slate-200"
-                disabled={isSubmitting}
-              >
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? "Adding Income..." : "Add Income"}
               </Button>
             </div>
             {submissionStatus && (
-              <div className="mt-4 text-center text-sm text-white">
-                {submissionStatus}
-              </div>
+              <div className="mt-4 text-center text-sm">{submissionStatus}</div>
             )}
           </form>
         </CardContent>
       </Card>
+      <InfoTable info="income" />
     </div>
   );
 };

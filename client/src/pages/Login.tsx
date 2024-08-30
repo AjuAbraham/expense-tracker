@@ -50,44 +50,44 @@ const Login: React.FC = () => {
 
 
   return (
-    <div className="flex items-center justify-center h-screen bg-black">
-      <Card className="mx-auto max-w-sm bg-transparent">
+    <div className="flex items-center justify-center h-screen">
+      <Card className="mx-auto max-w-sm bg-transparent rounded-xl">
         <CardHeader>
-          <CardTitle className="text-xl text-white">Login</CardTitle>
-          <CardDescription className="text-white">
+          <CardTitle className="text-xl">Login</CardTitle>
+          <CardDescription className="">
             Enter your email and password to login
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit}>
             <div className="grid gap-4">
-              <div className="grid gap-2 text-white">
+              <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
                   placeholder="m@example.com"
-                  className="bg-transparent border-slate-500"
+                  
                   value={formData.email}
                   onChange={handleChange}
                   required
                 />
               </div>
-              <div className="grid gap-2 text-white">
+              <div className="grid gap-2">
                 <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
                   type="password"
-                  className="bg-transparent border-slate-500"
+                  className=""
                   value={formData.password}
                   onChange={handleChange}
                   required
                 />
               </div>
-              <Button type="submit" className="w-full bg-white text-black hover:bg-slate-200" disabled={isSubmitting}>
+              <Button type="submit" className="w-full " disabled={isSubmitting}>
                 {isSubmitting ? "Logging in..." : "Log In"}
               </Button>
-              <Button variant="outline" className="w-full border-[1px] border-slate-500 text-white bg-black hover:bg-[#26272b] hover:text-white">
+              <Button variant="outline" className="w-full border-[1px] rounded-lg ">
                 Log in with Google
               </Button>
             </div>

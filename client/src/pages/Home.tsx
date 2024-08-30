@@ -45,8 +45,8 @@ const Home = () => {
 
   return (
     <>
-      <div className="grid h-screen w-screen grid-cols-12 bg-black">
-        <div className="bg-[#161a1d] col-span-3 m-3 rounded-2xl border-2 border-slate-500">
+      <div className="grid h-screen w-screen grid-cols-12">
+        <div className=" col-span-3 m-3 rounded-2xl border-2 ">
           {/* this is avatar div */}
           <div className="mt-10 flex ml-[30px]">
             <div className="flex items-center justify-center gap-4">
@@ -77,8 +77,8 @@ const Home = () => {
           </ul>
 
           {/* logout button*/}
-          <div className="mt-[390px] ml-[20px]">
-          <Button className="bg-white text-black hover:bg-slate-500" onClick={handleLogout}>
+          <div className="mt-[390px] ml-[20px] ">
+          <Button className= " rounded-xl bg-white text-black hover:bg-slate-500" onClick={handleLogout}>
           <ImExit  size={20}/>
           <h3 className="text-lg font-bold">Log Out</h3>
           </Button> 
@@ -87,7 +87,7 @@ const Home = () => {
 
         </div>
 
-        <div className="bg-purple-600 col-span-9 m-3 rounded-2xl">
+        <div className=" col-span-9 m-3 rounded-2xl">
           <Outlet/>
         </div>
       </div>

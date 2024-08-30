@@ -68,11 +68,11 @@ const Signup: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-black">
+    <div className="flex items-center justify-center h-screen">
       <Card className="mx-auto max-w-sm bg-transparent">
         <CardHeader>
-          <CardTitle className="text-xl text-white">Sign Up</CardTitle>
-          <CardDescription className="text-white">
+          <CardTitle className="text-xl">Sign Up</CardTitle>
+          <CardDescription>
             Enter your information to create an account
           </CardDescription>
         </CardHeader>
@@ -80,69 +80,57 @@ const Signup: React.FC = () => {
           <form onSubmit={handleSubmit}>
             <div className="grid gap-4">
               <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2 text-white">
+                <div className="grid gap-2">
                   <Label htmlFor="firstName">First name</Label>
                   <Input
                     id="firstName"
-                    className="bg-transparent border-slate-500"
                     value={formData.firstName}
                     onChange={handleChange}
                     required
                   />
                 </div>
-                <div className="grid gap-2 text-white">
+                <div className="grid gap-2">
                   <Label htmlFor="lastName">Last name</Label>
                   <Input
                     id="lastName"
-                    className="bg-transparent border-slate-500"
                     value={formData.lastName}
                     onChange={handleChange}
                     required
                   />
                 </div>
               </div>
-              <div className="grid gap-2 text-white">
+              <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
                   placeholder="m@example.com"
-                  className="bg-transparent border-slate-500"
                   value={formData.email}
                   onChange={handleChange}
                   required
                 />
               </div>
-              <div className="grid gap-2 text-white">
+              <div className="grid gap-2">
                 <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
                   type="password"
-                  className="bg-transparent border-slate-500"
                   value={formData.password}
                   onChange={handleChange}
                 />
               </div>
-              <div className="grid gap-2 text-white">
+              <div className="grid gap-2">
                 <Label htmlFor="profileImage">Profile Image</Label>
                 <Input
                   id="profileImage"
                   type="file"
-                  className="bg-transparent border-slate-500"
                   onChange={handleFileChange}
                 />
               </div>
-              <Button
-                type="submit"
-                className="w-full bg-white text-black hover:bg-slate-200"
-                disabled={isSubmitting}
-              >
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? "Creating..." : "Create an account"}
               </Button>
-              <Button
-                variant="outline"
-                className="w-full border-[1px] border-slate-500 text-white bg-black hover:bg-[#26272b] hover:text-white"
-              >
+              <Button variant="outline" className="w-full border-[1px]">
                 Sign up with Google
               </Button>
             </div>
@@ -153,9 +141,7 @@ const Signup: React.FC = () => {
               </Link>
             </div>
             {submissionStatus && (
-              <div className="mt-4 text-center text-sm text-white">
-                {submissionStatus}
-              </div>
+              <div className="mt-4 text-center text-sm">{submissionStatus}</div>
             )}
           </form>
         </CardContent>
