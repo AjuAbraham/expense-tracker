@@ -28,6 +28,19 @@
     --chart-3: 197 37% 14%; /* Darker Blue */
     --chart-4: 43 74% 56%; /* Darker Yellow/Orange */
     --chart-5: 27 87% 47%; 
+    --color-january: #FF8A80;
+  --color-february: #FF80AB;
+  --color-march: #EA80FC;
+  --color-april: #8C9EFF;
+  --color-may: #80D8FF;
+  --color-june: #A7FFEB;
+  --color-july: #C5E1A5;
+  --color-august: #FFE57F;
+  --color-september: #FFCC80;
+  --color-october: #FFAB91;
+  --color-november: #FF9E80;
+  --color-december: #B39DDB;
+
   }
  
   .dark {

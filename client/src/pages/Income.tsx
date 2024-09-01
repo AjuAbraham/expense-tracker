@@ -95,7 +95,7 @@ const Income: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center gap-6 p-4 h-full border-2 rounded-xl">
+    <div className="flex items-center gap-6 p-4 h-full border-2 rounded-xl scrollbar-hide">
       <Card className="mx-auto max-w-sm ml-16 rounded-xl ">
         <CardHeader>
           <CardTitle className="text-xl">Add Income</CardTitle>

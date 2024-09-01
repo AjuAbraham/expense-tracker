@@ -2,7 +2,6 @@ import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -12,43 +11,33 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { useContext, useEffect, useState } from "react";
-import { TokenContext } from "@/context/tokenContext";
-import axios from "@/axios";
+import {  useState } from "react";
 
-interface incomeInfo {
-  amount: number;
-  category: string;
-  date: string;
-  description?: string;
-  title: string;
-  _id: string;
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { expenseInfo } from "@/pages/Dashboard";
+
+export interface expenseType {
+  expenses: expenseInfo[];
 }
 
-const BarChat = () => {
-  const { getToken } = useContext(TokenContext);
-  const [expenses, setExpenses] = useState<[incomeInfo] | []>([]);
 
-  useEffect(() => {
-    const handleFetch = async () => {
-      const token = getToken();
+const BarChat:React.FC<expenseType> = ({expenses}) => {
+  
+  const [toggle, setToggle] = useState<string>("");
 
-      const res = await axios.get("/expenses/getExpense", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      setExpenses(res.data.expense);
-    };
-
-    handleFetch();
-  }, [getToken]);
+  
 
   const chartData = [];
   const currentMonth = new Date().getMonth();
 
-  const filteredExpenses = expenses.filter((expense) => {
+  const filteredExpenses = expenses.filter((expense:expenseInfo) => {
     const expenseYear = new Date(expense.date).getFullYear();
     return expenseYear === 2024;
   });
@@ -63,7 +52,6 @@ const BarChat = () => {
     },
     {}
   );
-
 
   const months = [
     "January",
@@ -88,7 +76,6 @@ const BarChat = () => {
     });
   }
 
-
   const chartConfig = {
     desktop: {
       label: "Desktop",
@@ -96,11 +83,29 @@ const BarChat = () => {
     },
   } satisfies ChartConfig;
 
+  const handleChange = (value:string)=>{
+      setToggle(value);
+       console.log(toggle)
+  }
+  
   return (
     <Card className="w-[400px] rounded-xl border-2">
       <CardHeader>
-        <CardTitle>Bar Chart - Label</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <div className="flex relative justify-between">
+        <CardTitle>Bar Chart</CardTitle>
+        <Select onValueChange={handleChange}> 
+      <SelectTrigger className="w-[120px]">
+        <SelectValue placeholder="Month" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          <SelectItem value="jan">Jan-Jun</SelectItem>
+          <SelectItem value="jul">Jul-Dec</SelectItem>
+        </SelectGroup>
+      </SelectContent>
+    </Select>
+        </div>
+        
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>

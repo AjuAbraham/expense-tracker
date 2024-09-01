@@ -7,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import React from "react";
 import {
   ChartConfig,
   ChartContainer,
@@ -22,60 +21,135 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-const desktopData = [
-  { month: "january", desktop: 186, fill: "var(--color-january)" },
-  { month: "february", desktop: 305, fill: "var(--color-february)" },
-  { month: "march", desktop: 237, fill: "var(--color-march)" },
-  { month: "april", desktop: 173, fill: "var(--color-april)" },
-  { month: "may", desktop: 209, fill: "var(--color-may)" },
-];
-const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  desktop: {
-    label: "Desktop",
-  },
-  mobile: {
-    label: "Mobile",
-  },
+import { useMemo, useState } from "react";
+import { expenseType } from "./BarChat";
+import { expenseInfo } from "@/pages/Dashboard";
+
+// Define the type for the data used in the PieChart
+interface PieData {
+  month: string;
+  desktop: number;
+  fill: string;
+}
+
+// Define the monthColors type
+const monthColors: Record<string, string> = {
+  January: "var(--color-january)",
+  February: "var(--color-february)",
+  March: "var(--color-march)",
+  April: "var(--color-april)",
+  May: "var(--color-may)",
+  June: "var(--color-june)",
+  July: "var(--color-july)",
+  August: "var(--color-august)",
+  September: "var(--color-september)",
+  October: "var(--color-october)",
+  November: "var(--color-november)",
+  December: "var(--color-december)",
+
+};
+const chartConfig: ChartConfig = {
   january: {
     label: "January",
-    color: "hsl(var(--chart-1))",
+    color: "hsl(0, 100%, 74%)", // #FF8A80
   },
   february: {
     label: "February",
-    color: "hsl(var(--chart-2))",
+    color: "hsl(330, 100%, 74%)", // #FF80AB
   },
   march: {
     label: "March",
-    color: "hsl(var(--chart-3))",
+    color: "hsl(290, 100%, 85%)", // #EA80FC
   },
   april: {
     label: "April",
-    color: "hsl(var(--chart-4))",
+    color: "hsl(240, 100%, 85%)", // #8C9EFF
   },
   may: {
     label: "May",
-    color: "hsl(var(--chart-5))",
+    color: "hsl(190, 100%, 75%)", // #80D8FF
   },
-} satisfies ChartConfig;
+  june: {
+    label: "June",
+    color: "hsl(160, 100%, 75%)", // #A7FFEB
+  },
+  july: {
+    label: "July",
+    color: "hsl(90, 55%, 75%)", // #C5E1A5
+  },
+  august: {
+    label: "August",
+    color: "hsl(50, 100%, 75%)", // #FFE57F
+  },
+  september: {
+    label: "September",
+    color: "hsl(30, 100%, 75%)", // #FFCC80
+  },
+  october: {
+    label: "October",
+    color: "hsl(15, 100%, 75%)", // #FFAB91
+  },
+  november: {
+    label: "November",
+    color: "hsl(10, 100%, 75%)", // #FF9E80
+  },
+  december: {
+    label: "December",
+    color: "hsl(270, 50%, 75%)", // #B39DDB
+  },
+};
 
-const CircleChart = () => {
-  const id = "pie-interactive";
-  const [activeMonth, setActiveMonth] = React.useState(desktopData[0].month);
-  const activeIndex = React.useMemo(
-    () => desktopData.findIndex((item) => item.month === activeMonth),
-    [activeMonth]
+
+const CircleChart: React.FC<expenseType> = ({ expenses }) => {
+  const currentMonth = new Date().getMonth();
+
+  // Filter expenses for the year 2024
+  const filteredExpenses = expenses.filter((expense: expenseInfo) => {
+    const expenseYear = new Date(expense.date).getFullYear();
+    return expenseYear === 2024;
+  });
+
+  // Group expenses by month and calculate total for each month
+  const monthlyExpenses = filteredExpenses.reduce(
+    (acc: { [key: number]: number }, expense) => {
+      const expenseMonth = new Date(expense.date).getMonth();
+      acc[expenseMonth] = (acc[expenseMonth] || 0) + expense.amount;
+      return acc;
+    },
+    {}
   );
-  const months = React.useMemo(() => desktopData.map((item) => item.month), []);
+
+
+  // Generate desktopData based on filtered expenses
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const desktopData: PieData[] = [];
+  const months = ["January", "February", "March", "April", "May", "June","July","August","September","October","November","December"];
+
+  for (let i = 0; i <= currentMonth && i < months.length; i++) {
+    const desktopValue = monthlyExpenses[i] || 0;
+    desktopData.push({
+      month: months[i],
+      desktop: desktopValue,
+      fill: monthColors[months[i]],
+    });
+  }
+
+  const id = "pie-interactive";
+  const [activeMonth, setActiveMonth] = useState<string>(
+    desktopData[0]?.month || ""
+  );
+  const activeIndex = useMemo(
+    () => desktopData.findIndex((item) => item.month === activeMonth),
+    [activeMonth, desktopData]
+  );
+ const newYear = new Date().getFullYear();
   return (
-    <Card data-chart={id} className="flex flex-col w-[400px] rounded-xl border-2">
+    <Card data-chart={id} className="flex flex-col">
       <ChartStyle id={id} config={chartConfig} />
       <CardHeader className="flex-row items-start space-y-0 pb-0">
         <div className="grid gap-1">
-          <CardTitle>Pie Chart - Interactive</CardTitle>
-          <CardDescription>January - June 2024</CardDescription>
+          <CardTitle>Pie Chart</CardTitle>
+          <CardDescription>{newYear}</CardDescription>
         </div>
         <Select value={activeMonth} onValueChange={setActiveMonth}>
           <SelectTrigger
@@ -85,29 +159,21 @@ const CircleChart = () => {
             <SelectValue placeholder="Select month" />
           </SelectTrigger>
           <SelectContent align="end" className="rounded-xl">
-            {months.map((key) => {
-              const config = chartConfig[key as keyof typeof chartConfig];
-              if (!config) {
-                return null;
-              }
-              return (
-                <SelectItem
-                  key={key}
-                  value={key}
-                  className="rounded-lg [&_span]:flex"
-                >
-                  <div className="flex items-center gap-2 text-xs">
-                    <span
-                      className="flex h-3 w-3 shrink-0 rounded-sm"
-                      style={{
-                        backgroundColor: `var(--color-${key})`,
-                      }}
-                    />
-                    {config?.label}
-                  </div>
-                </SelectItem>
-              );
-            })}
+            {desktopData.map((item) => (
+              <SelectItem
+                key={item.month}
+                value={item.month}
+                className="rounded-lg [&_span]:flex"
+              >
+                <div className="flex items-center gap-2 text-xs">
+                  <span
+                    className="flex h-3 w-3 shrink-0 rounded-sm"
+                    style={{ backgroundColor: item.fill }}
+                  />
+                  {item.month}
+                </div>
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </CardHeader>
@@ -158,18 +224,19 @@ const CircleChart = () => {
                           y={viewBox.cy}
                           className="fill-foreground text-3xl font-bold"
                         >
-                          {desktopData[activeIndex].desktop.toLocaleString()}
+                          {desktopData[activeIndex]?.desktop.toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground"
                         >
-                          Visitors
+                          Expenses
                         </tspan>
                       </text>
                     );
                   }
+                  return null;
                 }}
               />
             </Pie>
