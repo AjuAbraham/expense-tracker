@@ -122,7 +122,7 @@ const CircleChart: React.FC<expenseType> = ({ expenses }) => {
 
   // Generate desktopData based on filtered expenses
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const desktopData: PieData[] = [];
+  let desktopData: PieData[] = [];
   const months = ["January", "February", "March", "April", "May", "June","July","August","September","October","November","December"];
 
   for (let i = 0; i <= currentMonth && i < months.length; i++) {
@@ -133,7 +133,9 @@ const CircleChart: React.FC<expenseType> = ({ expenses }) => {
       fill: monthColors[months[i]],
     });
   }
-
+  desktopData = desktopData.filter((data)=>{
+    return data.desktop!=0;
+  })
   const id = "pie-interactive";
   const [activeMonth, setActiveMonth] = useState<string>(
     desktopData[0]?.month || ""

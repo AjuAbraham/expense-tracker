@@ -34,7 +34,7 @@ const BarChat:React.FC<expenseType> = ({expenses}) => {
 
   
 
-  const chartData = [];
+  let chartData = [];
   const currentMonth = new Date().getMonth();
 
   const filteredExpenses = expenses.filter((expense:expenseInfo) => {
@@ -52,7 +52,7 @@ const BarChat:React.FC<expenseType> = ({expenses}) => {
     },
     {}
   );
-
+  console.log(monthlyExpenses);
   const months = [
     "January",
     "February",
@@ -75,7 +75,9 @@ const BarChat:React.FC<expenseType> = ({expenses}) => {
       desktop: desktopValue,
     });
   }
-
+  chartData = chartData.filter((data)=>{
+    return data.desktop!=0;
+  })
   const chartConfig = {
     desktop: {
       label: "Desktop",
@@ -113,7 +115,7 @@ const BarChat:React.FC<expenseType> = ({expenses}) => {
             accessibilityLayer
             data={chartData}
             margin={{
-              top: 20,
+              top: 35,
             }}
           >
             <CartesianGrid vertical={false} />
