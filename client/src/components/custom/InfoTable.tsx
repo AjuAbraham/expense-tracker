@@ -43,7 +43,7 @@ const InfoTable:React.FC<Props> = ({info}) => {
 
   return (
     <div className="overflow-y-auto max-h-[300px] border-2 rounded-xl scrollbar-custom">
-      <Table className="w-full border-2 ">
+      <Table className="w-full">
       <TableHeader>
         <TableRow>
           <TableHead  className="text-primary">Title</TableHead>

@@ -138,7 +138,7 @@ const CircleChart: React.FC<expenseType> = ({ expenses }) => {
   })
   const id = "pie-interactive";
   const [activeMonth, setActiveMonth] = useState<string>(
-    desktopData[0]?.month || ""
+    months[currentMonth]||desktopData[0]?.month || ""
   );
   const activeIndex = useMemo(
     () => desktopData.findIndex((item) => item.month === activeMonth),
