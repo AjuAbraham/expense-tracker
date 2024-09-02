@@ -45,17 +45,17 @@ const Home = () => {
   return (
     <>
       <div className="grid h-screen w-screen grid-cols-12">
-        <div className="col-span-3 m-3 flex flex-col justify-between rounded-2xl border-2   ">
+        <div className="md:col-span-3 col-span-2  m-3 md:flex flex-col justify-between rounded-2xl border-2  hidden">
           {/* Avatar */}
-          <div className=" flex ml-[30px] mt-10">
+          <div className=" flex md:ml-[30px] ml-0 mt-10">
             <div className="flex items-center justify-center gap-4">
-              <Avatar className="w-[60px] h-[60px]">
+              <Avatar className="md:w-[60px] md:h-[60px] w-[40px] h-[40px] rounded-full object-contain">
                 <AvatarImage
                   src={user?.avatar ? user.avatar : "https://github.com/shadcn.png"}
                 />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
-              <div className="flex flex-col">
+              <div className="md:flex md:flex-col hidden">
                 <h2 className="text-xl font-bold text-white">
                   {user?.firstName} {user?.lastName}
                 </h2>
@@ -64,56 +64,56 @@ const Home = () => {
           </div>
 
           {/* Nav Bar */}
-          <ul className=" ml-[40px] mt-[-150px] text-[#C7D1DB]">
+          <ul className=" md:ml-[40px] flex flex-col items-center gap-8 md:block mt-[-150px] text-[#C7D1DB]">
             <li>
               <NavLink
                 to="/dashboard"
                 className={({ isActive }) =>
-                  `flex gap-5 items-center cursor-pointer mb-5 p-2 rounded-md transition-all duration-300 transform hover:scale-105 active:scale-95 w-[280px] ${
-                    isActive ? "bg-orange-600 text-black rounded-lg" : "hover:bg-orange-900"
+                 `md:flex md:gap-5 md:items-center md:cursor-pointer md:mb-5 md:p-2 md:rounded-md md:transition-all md:duration-300 md:transform md:hover:scale-105 md:active:scale-95 md:w-[280px] ${
+                    isActive ? "bg-orange-600 md:text-black text-orange-600 rounded-lg" : "hover:bg-orange-900"
                   }`
                 }
               >
                 <ImStatsDots size={25} />
-                <p className="font-bold">Dashboard</p>
+                <p className="md:font-bold hidden md:block">Dashboard</p>
               </NavLink>
             </li>
             <li>
               <NavLink
                 to="/incomes"
                 className={({ isActive }) =>
-                  `flex gap-5 items-center cursor-pointer mb-5 p-2 rounded-md transition-all duration-300 transform hover:scale-105 active:scale-95 w-[280px] ${
-                    isActive ? "bg-orange-600 text-black rounded-lg" : "hover:bg-orange-900"
+                 `md:flex md:gap-5 md:items-center md:cursor-pointer md:mb-5 md:p-2 md:rounded-md md:transition-all md:duration-300 md:transform md:hover:scale-105 md:active:scale-95 md:w-[280px] ${
+                    isActive ? "bg-orange-600 md:text-black text-orange-600 rounded-lg" : "hover:bg-orange-900"
                   }`
                 }
               >
                 <FaMoneyCheckDollar size={25} />
-                <p className="font-bold">Incomes</p>
+                <p className="md:font-bold hidden md:block">Incomes</p>
               </NavLink>
             </li>
             <li>
               <NavLink
                 to="/expenses"
                 className={({ isActive }) =>
-                  `flex gap-5 items-center cursor-pointer mb-5 p-2 rounded-md transition-all duration-300 transform hover:scale-105 active:scale-95 w-[280px] ${
-                    isActive ? "bg-orange-600 text-black rounded-lg" : "hover:bg-orange-900"
+                  `md:flex md:gap-5 md:items-center md:cursor-pointer md:mb-5 md:p-2 md:rounded-md md:transition-all md:duration-300 md:transform md:hover:scale-105 md:active:scale-95 md:w-[280px] ${
+                    isActive ? "bg-orange-600 md:text-black text-orange-600 rounded-lg" : "hover:bg-orange-900"
                   }`
                 }
               >
                 <GiReceiveMoney size={25} />
-                <p className="font-bold">Expenses</p>
+                <p className="md:font-bold hidden md:block">Expenses</p>
               </NavLink>
             </li>
           </ul>
 
           {/* Logout Button */}
-          <div className=" ml-[20px] mb-[20px]">
+          <div className=" md:ml-[40px] mb-[20px]">
             <Button
-              className="rounded-xl bg-white text-black hover:bg-slate-500"
+              className="rounded-xl bg-white   text-black hover:bg-slate-500"
               onClick={handleLogout}
             >
-              <ImExit size={20} />
-              <h3 className="text-lg font-bold">Log Out</h3>
+              <ImExit className="md:text-xl text-md" />
+              <h3 className="md:text-lg md:font-bold hidden md:block rounded-2xl">Log Out</h3>
             </Button>
           </div>
         </div>

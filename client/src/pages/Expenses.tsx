@@ -90,7 +90,7 @@ const Expenses: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center  gap-6 p-4 h-full scrollbar-hide  border-2 rounded-xl">
+    <div className="flex md:items-center md:flex-row flex-col gap-6  p-4 h-full scrollbar-hide  md:border-2 border-0 rounded-xl">
       <Card className="mx-auto max-w-sm ml-12 rounded-xl">
         <CardHeader>
           <CardTitle className="text-xl">Add Expense</CardTitle>
