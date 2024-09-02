@@ -45,9 +45,9 @@ const Home = () => {
   return (
     <>
       <div className="grid h-screen w-screen grid-cols-12">
-        <div className="col-span-3 m-3 rounded-2xl border-2 sm:block hidden">
+        <div className="col-span-3 m-3 flex flex-col justify-between rounded-2xl border-2   ">
           {/* Avatar */}
-          <div className="mt-10 flex ml-[30px]">
+          <div className=" flex ml-[30px] mt-10">
             <div className="flex items-center justify-center gap-4">
               <Avatar className="w-[60px] h-[60px]">
                 <AvatarImage
@@ -64,7 +64,7 @@ const Home = () => {
           </div>
 
           {/* Nav Bar */}
-          <ul className="mt-24 ml-[40px] text-[#C7D1DB]">
+          <ul className=" ml-[40px] mt-[-150px] text-[#C7D1DB]">
             <li>
               <NavLink
                 to="/dashboard"
@@ -107,7 +107,7 @@ const Home = () => {
           </ul>
 
           {/* Logout Button */}
-          <div className="mt-[390px] ml-[20px]">
+          <div className=" ml-[20px] mb-[20px]">
             <Button
               className="rounded-xl bg-white text-black hover:bg-slate-500"
               onClick={handleLogout}
