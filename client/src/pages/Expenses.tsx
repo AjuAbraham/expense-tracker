@@ -208,7 +208,7 @@ const Expenses: React.FC = () => {
           </form>
         </CardContent>
       </Card>
-      <InfoTable info="expense" />
+      <InfoTable info="expense"/>
     </div>
   );
 };

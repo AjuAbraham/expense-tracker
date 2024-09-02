@@ -146,7 +146,7 @@ const CircleChart: React.FC<expenseType> = ({ expenses }) => {
   );
  const newYear = new Date().getFullYear();
   return (
-    <Card data-chart={id} className="flex flex-col">
+    <Card data-chart={id} className="flex flex-col rounded-2xl">
       <ChartStyle id={id} config={chartConfig} />
       <CardHeader className="flex-row items-start space-y-0 pb-0">
         <div className="grid gap-1">

@@ -1,10 +1,9 @@
-import { TrendingUp } from "lucide-react"
+
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -19,18 +18,23 @@ import {
 import { expenseInfo } from "@/pages/Dashboard"
 
 interface info{
-  expenses:expenseInfo;
-  incomes:expenseInfo;
+  expenses:expenseInfo[];
+  incomes:expenseInfo[];
+}
+interface chartDataType{
+  month:string;
+  expense:number;
+  income:number;
 }
 
-const chartData:[] = []
+
   const chartConfig = {
-    desktop: {
-      label: "Desktop",
+    income: {
+      label: "Income",
       color: "hsl(var(--chart-1))",
     },
-    mobile: {
-      label: "Mobile",
+    expense: {
+      label: "Expense",
       color: "hsl(var(--chart-2))",
     },
   } satisfies ChartConfig
@@ -40,9 +44,13 @@ const chartData:[] = []
 
 const AreasChart:React.FC<info> = ({expenses,incomes}) => {
   const currentMonth = new Date().getMonth();
-
+  let chartData:chartDataType[]= [];
   const filteredExpenses = expenses.filter((expense:expenseInfo) => {
     const expenseYear = new Date(expense.date).getFullYear();
+    return expenseYear === 2024;
+  });
+  const filteredIncome = incomes.filter((income:expenseInfo) => {
+    const expenseYear = new Date(income.date).getFullYear();
     return expenseYear === 2024;
   });
 
@@ -52,6 +60,15 @@ const AreasChart:React.FC<info> = ({expenses,incomes}) => {
       const expenseMonth = new Date(expense.date).getMonth(); // 0 for January, 11 for December
 
       acc[expenseMonth] = (acc[expenseMonth] || 0) + expense.amount;
+      return acc;
+    },
+    {}
+  );
+  const monthlyIncomes = filteredIncome.reduce(
+    (acc: { [key: number]: number }, income) => {
+      const incomeMonth = new Date(income.date).getMonth(); // 0 for January, 11 for December
+
+      acc[incomeMonth] = (acc[incomeMonth] || 0) + income.amount;
       return acc;
     },
     {}
@@ -72,21 +89,26 @@ const AreasChart:React.FC<info> = ({expenses,incomes}) => {
     "December",
   ];
   for (let i = 0; i <= currentMonth; i++) {
-    const desktopValue = monthlyExpenses[i] || 0;
+    const expenseValue = monthlyExpenses[i] || 0;
+    const incomeValue = monthlyIncomes[i] || 0;
 
     chartData.push({
       month: months[i],
-      expense: desktopValue,
-      income: desktopValue
+      expense: expenseValue,
+      income: incomeValue
     });
   }
+  chartData = chartData.filter((data)=>{
+    return data.expense!=0 && data.income!=0;
+  })
+  const date = `${chartData[0]?.month} ${new Date().getFullYear()} - ${chartData[chartData?.length-1]?.month} ${new Date().getFullYear()}`
 
     return (
-        <Card>
+        <Card className="w-[450px] rounded-2xl">
           <CardHeader>
-            <CardTitle>Area Chart - Legend</CardTitle>
+            <CardTitle>Area Chart</CardTitle>
             <CardDescription>
-              Showing total visitors for the last 6 months
+              {date}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -112,37 +134,25 @@ const AreasChart:React.FC<info> = ({expenses,incomes}) => {
                   content={<ChartTooltipContent indicator="line" />}
                 />
                 <Area
-                  dataKey="mobile"
+                  dataKey="expense"
                   type="natural"
-                  fill="var(--color-mobile)"
+                  fill="var(--color-expense)"
                   fillOpacity={0.4}
-                  stroke="var(--color-mobile)"
+                  stroke="var(--color-expense)"
                   stackId="a"
                 />
                 <Area
-                  dataKey="desktop"
+                  dataKey="income"
                   type="natural"
-                  fill="var(--color-desktop)"
+                  fill="var(--color-income)"
                   fillOpacity={0.4}
-                  stroke="var(--color-desktop)"
+                  stroke="var(--color-income)"
                   stackId="a"
                 />
                 <ChartLegend content={<ChartLegendContent />} />
               </AreaChart>
             </ChartContainer>
           </CardContent>
-          <CardFooter>
-            <div className="flex w-full items-start gap-2 text-sm">
-              <div className="grid gap-2">
-                <div className="flex items-center gap-2 font-medium leading-none">
-                  Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-                </div>
-                <div className="flex items-center gap-2 leading-none text-muted-foreground">
-                  January - June 2024
-                </div>
-              </div>
-            </div>
-          </CardFooter>
         </Card>
       )
 }

@@ -46,9 +46,9 @@ const Home = () => {
   return (
     <>
       <div className="grid h-screen w-screen grid-cols-12">
-        <div className=" col-span-3 m-3 rounded-2xl border-2 ">
+        <div className=" col-span-3 m-3 rounded-2xl border-2 sm:block hidden ">
           {/* this is avatar div */}
-          <div className="mt-10 flex ml-[30px]">
+          <div className="mt-10 flex ml-[30px] ">
             <div className="flex items-center justify-center gap-4">
               <Avatar className="w-[60px] h-[60px]">
                 <AvatarImage src={user?.avatar?user.avatar:"https://github.com/shadcn.png"} />

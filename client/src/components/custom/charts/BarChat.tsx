@@ -52,7 +52,7 @@ const BarChat:React.FC<expenseType> = ({expenses}) => {
     },
     {}
   );
-  console.log(monthlyExpenses);
+ 
   const months = [
     "January",
     "February",

@@ -1,7 +1,6 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -43,8 +42,8 @@ const InfoTable:React.FC<Props> = ({info}) => {
   }, [getToken, incomes,info]);
 
   return (
-    <Table className="w-full border-2 ">
-      <TableCaption className="text-primary">{`A list of your ${info.charAt(0).toLocaleUpperCase()+info.slice(1)}`}</TableCaption>
+    <div className="overflow-y-auto max-h-[300px] border-2 rounded-xl scrollbar-custom">
+      <Table className="w-full border-2 ">
       <TableHeader>
         <TableRow>
           <TableHead  className="text-primary">Title</TableHead>
@@ -67,6 +66,7 @@ const InfoTable:React.FC<Props> = ({info}) => {
         ))}
       </TableBody>
     </Table>
+    </div>
   );
 };
 

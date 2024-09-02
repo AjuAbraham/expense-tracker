@@ -54,7 +54,7 @@ const Dashboard = () => {
     handleFetch();
   }, [getToken, navigate, removeToken]);
   return (
-    <div className="rounded-2xl flex gap-8 h-full border-2 p-4 scrollbar-hide">
+    <div className="rounded-2xl flex gap-8 h-full border-2 p-4">
       <div className="flex flex-col gap-14">
       <AreasChart expenses={expenses} incomes={incomes}/>
       <BarChat expenses={expenses}/>

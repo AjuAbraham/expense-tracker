@@ -73,5 +73,21 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"),require('tailwind-scrollbar-hide')],
+  plugins: [require("tailwindcss-animate"),
+    function ({ addUtilities }) {
+      addUtilities({
+        /* Custom scrollbar styles for WebKit browsers */
+        '.scrollbar-custom': {
+          '&::-webkit-scrollbar': {
+            width: '6px', // Small width scrollbar
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: '#686969', // Scrollbar thumb color
+            borderRadius: '9999px', // Pill-shaped scrollbar thumb
+          },
+          
+        },
+      }); 
+    },
+  ],
 }
