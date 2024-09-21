@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "tsc --build",
+    "build": "tsc --build && node add-js-extension.js",
     "start": "node ./dist/index.js",
     "dev": "tsx watch src/index.ts"
   },
@@ -19,6 +19,7 @@
     "@types/jsonwebtoken": "^9.0.6",
     "@types/multer": "^1.4.12",
     "@types/node": "^22.5.0",
+    "tsc-alias": "^1.8.10",
     "tsx": "^4.19.0",
     "typescript": "^5.5.4"
   },

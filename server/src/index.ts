@@ -1,5 +1,5 @@
 import { app } from "./app";
-import dbConnect from "./db";
+import dbConnect from "./db/db";
 
 dbConnect().then(() => {
   app.listen(process.env.PORT, () => {
